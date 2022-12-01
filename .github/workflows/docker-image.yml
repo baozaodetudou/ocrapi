@@ -13,38 +13,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - # git checkout 代码
-        - name: Checkout
-          uses: actions/checkout@v2
-        # 设置 QEMU, 后面 docker buildx 依赖此.
-        - name: Set up QEMU
-          uses: docker/setup-qemu-action@v1
-        # 设置 Docker buildx, 方便构建 Multi platform 镜像
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v1
-        # 登录 docker hub
-        - name: Login to DockerHub
-          uses: docker/login-action@v1
-          with:
-            # GitHub Repo => Settings => Secrets 增加 docker hub 登录密钥信息
-            # DOCKERHUB_USERNAME 是 docker hub 账号名.
-            # DOCKERHUB_TOKEN: docker hub => Account Setting => Security 创建.
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
-        # 构建 Docker 并推送到 Docker hub
-        - name: Build and push
-          id: docker_build
-          uses: docker/build-push-action@v2
-          with:
-            # 是否 docker push
-            push: true
-            context: .
-            file: ./Dockerfile
-            # 生成多平台镜像, see https://github.com/docker-library/bashbrew/blob/v0.1.1/architecture/oci-platform.go
-            platforms: |
-              linux/amd64
-              linux/arm64
-            # 生成两个 docker tag: ${APP_VERSION} 和 latest
-            tags: |
-              ${{ secrets.DOCKER_USERNAME }}/ocrapi:latest
-              ${{ secrets.DOCKER_USERNAME }}/ocrapi:${{ env.APP_VERSION }}
+      # git checkout 代码
+      - name: Checkout
+        uses: actions/checkout@master
+      # 设置 QEMU, 后面 docker buildx 依赖此.
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      # 设置 Docker buildx, 方便构建 Multi platform 镜像
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      # 登录 docker hub
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          # GitHub Repo => Settings => Secrets 增加 docker hub 登录密钥信息
+          # DOCKERHUB_USERNAME 是 docker hub 账号名.
+          # DOCKERHUB_TOKEN: docker hub => Account Setting => Security 创建.
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # 构建 Docker 并推送到 Docker hub
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          # 是否 docker push
+          push: true
+          context: .
+          file: ./Dockerfile
+          # 生成多平台镜像, see https://github.com/docker-library/bashbrew/blob/v0.1.1/architecture/oci-platform.go
+          platforms: |
+            linux/amd64
+            linux/arm64
+          # 生成两个 docker tag: ${APP_VERSION} 和 latest
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/ocrapi:latest
+            ${{ secrets.DOCKER_USERNAME }}/ocrapi:${{ env.APP_VERSION }}
