@@ -1,0 +1,4 @@
+fastapi==0.88.0
+uvicorn==0.20.0
+paddlepaddle>=2.4.0
+paddlehub>=2.3.1
