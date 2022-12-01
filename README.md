@@ -1,2 +1,3 @@
-# ocrapi
-端口9000
+# NAStool OCR
+
+https://nastool.cn/captcha/base64

@@ -43,7 +43,6 @@ jobs:
           # 生成多平台镜像, see https://github.com/docker-library/bashbrew/blob/v0.1.1/architecture/oci-platform.go
           platforms: |
             linux/amd64
-            linux/arm64
           # 生成两个 docker tag: ${APP_VERSION} 和 latest
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/ocrapi:latest
