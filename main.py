@@ -8,14 +8,14 @@ import numpy as np
 from PIL import Image
 from fastapi import FastAPI
 from pydantic import BaseModel
-import paddlehub as hub
-
+from paddleocr import PaddleOCR
 
 
 app = FastAPI()
 # Paddleocr目前支持中英文、英文、法语、德语、韩语、日语，可以通过修改lang参数进行切换
 # 参数依次为`ch`, `en`, `french`, `german`, `korean`, `japan`。
-ocr = hub.Module(name="ch_pp-ocrv3")       # mkldnn加速仅在CPU下有效
+ocr = PaddleOCR(use_angle_cls=True, lang="ch")  # need to run only once to download and load model into memory
+
 
 class OCR(BaseModel):
     base64_img: str
@@ -32,9 +32,13 @@ async def say_hello(data: OCR):
     img = Image.open(io.BytesIO(img_b)).convert("RGB")
     mask_npl = np.array(img, dtype=np.uint8)
     ret, thresh1 = cv2.threshold(mask_npl, 1, 255, cv2.THRESH_BINARY)
-    result = ocr.recognize_text(images=[thresh1])
-    result = ''.join(re.findall(r'[A-Za-z0-9]', result[0].get('data')[0].get('text')))
-
+    results = ocr.ocr(thresh1, cls=True)
+    try:
+        result = ''.join(re.findall(r'[A-Za-z0-9]', results[0][0][1][0]))
+    except Exception as e:
+        print(results)
+        print(e)
+        result = ''
     print(result)
 
     return {"res": result}
