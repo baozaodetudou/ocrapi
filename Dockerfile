@@ -4,7 +4,7 @@ ENV LANG="C.UTF-8" \
     REPO_URL="https://github.com/jxxghp/nas-tools-ocr.git" \
     WORKDIR="/app"
 WORKDIR ${WORKDIR}
-RUN apt-get update && apt-get install -y ffmpeg libgomp1 libsm6 libxrender1 libxext6 libgl1 python3 python3-pip
+RUN apt-get update && apt-get install -y git ffmpeg libgomp1 libsm6 libxrender1 libxext6 libgl1 python3 python3-pip
 RUN git clone -b main ${REPO_URL} ${WORKDIR}
 RUN pip3 install -r requirements.txt
 EXPOSE 9899
