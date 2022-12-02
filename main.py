@@ -31,22 +31,14 @@ async def captcha_base64(data: OCR):
     img_b = base64.b64decode(base64_img.encode('utf-8'))
     img = Image.open(io.BytesIO(img_b)).convert("RGB")
     mask_npl = np.array(img, dtype=np.uint8)
-    # plt.imshow(mask_npl)
-    # plt.show()
-    ret, thresh = cv2.threshold(mask_npl, 1, 255, cv2.THRESH_BINARY)
-    # plt.imshow(thresh)
-    # plt.show()
-    thresh1 = noise_unsome_piexl(thresh)
-    # plt.imshow(thresh1)
-    # plt.show()
-    # im1 = operate_img(thresh, 4)
-    # plt.imshow(im1)
-    # plt.show()
-    grayImage = around_white(thresh1)
-    # plt.imshow(grayImage)
-    # plt.show()
 
-    results = ocr.ocr(grayImage, cls=True)
+    ret, thresh = cv2.threshold(mask_npl, 1, 255, cv2.THRESH_BINARY)
+
+    thresh1 = noise_unsome_piexl(thresh)
+
+    gray_image = around_white(thresh1)
+
+    results = ocr.ocr(gray_image, cls=True)
     try:
         result = ''.join(re.findall(r'[A-Za-z0-9]', results[0][0][1][0]))
     except Exception as e:
