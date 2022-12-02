@@ -8,4 +8,4 @@ RUN apt-get update && apt-get install -y git ffmpeg libgomp1 libsm6 libxrender1 
 RUN git clone -b main ${REPO_URL} ${WORKDIR}
 RUN pip3 install -r requirements.txt
 EXPOSE 9899
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "9000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "9899"]
